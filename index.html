@@ -3,22 +3,39 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<title>AR Business Card</title>
+<title>Sathya Nair — AR Business Card</title>
 
 <!-- AR engine: A-Frame (3D) + MindAR (image tracking) -->
 <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
 <style>
-  html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+  html, body { margin: 0; height: 100%; overflow: hidden; font-family: system-ui, sans-serif; }
+  #contact-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    display: flex; justify-content: space-around; gap: 6px;
+    padding: 12px 8px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+  }
+  #contact-bar a {
+    color: #fff; text-decoration: none; font-size: 13px; text-align: center;
+    background: rgba(255,255,255,0.15); padding: 8px 10px; border-radius: 14px; flex: 1;
+  }
+  #hint {
+    position: fixed; top: 14px; left: 0; right: 0; text-align: center; z-index: 10;
+    color: #fff; font-size: 13px; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
 </style>
 </head>
 <body>
 
+<div id="hint">Point your camera at the card</div>
+
 <!--
-  imageTargetSrc points at MindAR's own demo card so this works the moment you
-  open it. Once you've compiled a target from YOUR card (see README), change
-  this line to: imageTargetSrc: ./targets.mind;
+  imageTargetSrc points at ./targets.mind — make sure that file is uploaded
+  in the SAME folder as this index.html every time you redeploy, or the
+  camera view will fail to start (this is the most common cause of a
+  black screen).
 -->
 <a-scene
   mindar-image="imageTargetSrc: ./targets.mind;"
@@ -29,44 +46,31 @@
 >
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-  <!-- everything inside here is locked to the card and only appears once it's detected -->
-  <a-entity id="target" mindar-image-target="targetIndex: 0">
+  <a-entity mindar-image-target="targetIndex: 0">
+    <!-- soft backing panel so text is readable over any card design -->
+    <a-plane color="#111827" opacity="0.55" height="0.42" width="1" position="0 0 -0.02"></a-plane>
 
-    <!-- top-right badge, sits just above the card -->
-    <a-entity class="pop" scale="0.001 0.001 0.001" position="0.22 0.34 0.02">
-      <a-plane color="#000000" height="0.075" width="0.5"></a-plane>
-      <a-text value="FUTURE MUG  ·  TRUSTED EVALUATION PARTNER" align="center" color="#ffffff"
-        font="exo2bold" width="0.95" position="0 0 0.001"></a-text>
-    </a-entity>
-
-    <!-- vertical name tag, just off the left edge of the card -->
-    <a-entity class="pop" scale="0.001 0.001 0.001" position="-0.63 0.02 0.02" rotation="0 0 90">
-      <a-plane color="#000000" height="0.6" width="0.15"></a-plane>
-      <a-text value="SATHYA NAIR" align="center" color="#ffffff" font="exo2bold" width="1.4" position="0 0 0.001"></a-text>
-    </a-entity>
-
-    <!-- vertical title tag, just to the left of the name tag -->
-    <a-entity class="pop" scale="0.001 0.001 0.001" position="-0.47 0.02 0.02" rotation="0 0 90">
-      <a-plane color="#000000" height="0.42" width="0.1"></a-plane>
-      <a-text value="SENIOR CONSULTANT" align="center" color="#ffffff" font="exo2bold" width="1" position="0 0 0.001"></a-text>
-    </a-entity>
-
+    <a-text
+      value="SATHYA NAIR"
+      align="center" color="#ffffff" width="1.6" font="exo2bold"
+      position="0 0.08 0"
+      animation="property: position; to: 0 0.14 0; dir: alternate; dur: 1400; loop: true; easing: easeInOutSine"
+    ></a-text>
+    <a-text
+      value="SENIOR CONSULTANT  ·  FUTURE MUG"
+      align="center" color="#9CA3AF" width="1" font="exo2bold"
+      position="0 -0.06 0"
+    ></a-text>
   </a-entity>
 </a-scene>
 
-<script>
-  // Staggered "pop in" when the card is found; reset instantly when it's lost
-  // so the entrance plays again next time.
-  document.querySelector('#target').addEventListener('targetFound', () => {
-    document.querySelectorAll('.pop').forEach((el, i) => {
-      el.setAttribute('animation__pop',
-        `property: scale; from: 0.001 0.001 0.001; to: 1 1 1; dur: 500; delay: ${i * 130}; easing: easeOutBack`);
-    });
-  });
-  document.querySelector('#target').addEventListener('targetLost', () => {
-    document.querySelectorAll('.pop').forEach(el => el.setAttribute('scale', '0.001 0.001 0.001'));
-  });
-</script>
+<!-- Always-visible action buttons (not tracked — work as soon as the page loads) -->
+<div id="contact-bar">
+  <a href="tel:+919845200661">📞 Call</a>
+  <a href="https://wa.me/919845200661">💬 WhatsApp</a>
+  <a href="mailto:sathya@futuremug.com">✉️ Email</a>
+  <a href="contact.vcf" download>💾 Save</a>
+</div>
 
 </body>
 </html>
