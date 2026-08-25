@@ -30,29 +30,43 @@
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
   <!-- everything inside here is locked to the card and only appears once it's detected -->
-  <a-entity mindar-image-target="targetIndex: 0">
+  <a-entity id="target" mindar-image-target="targetIndex: 0">
 
     <!-- top-right badge, sits just above the card -->
-    <a-entity position="0.22 0.34 0.02">
+    <a-entity class="pop" scale="0.001 0.001 0.001" position="0.22 0.34 0.02">
       <a-plane color="#000000" height="0.075" width="0.5"></a-plane>
       <a-text value="FUTURE MUG  ·  TRUSTED EVALUATION PARTNER" align="center" color="#ffffff"
-        width="0.95" position="0 0 0.001"></a-text>
+        font="exo2bold" width="0.95" position="0 0 0.001"></a-text>
     </a-entity>
 
     <!-- vertical name tag, just off the left edge of the card -->
-    <a-entity position="-0.63 0.02 0.02" rotation="0 0 90">
+    <a-entity class="pop" scale="0.001 0.001 0.001" position="-0.63 0.02 0.02" rotation="0 0 90">
       <a-plane color="#000000" height="0.6" width="0.15"></a-plane>
-      <a-text value="SATHYA NAIR" align="center" color="#ffffff" width="1.4" position="0 0 0.001"></a-text>
+      <a-text value="SATHYA NAIR" align="center" color="#ffffff" font="exo2bold" width="1.4" position="0 0 0.001"></a-text>
     </a-entity>
 
     <!-- vertical title tag, just to the left of the name tag -->
-    <a-entity position="-0.47 0.02 0.02" rotation="0 0 90">
+    <a-entity class="pop" scale="0.001 0.001 0.001" position="-0.47 0.02 0.02" rotation="0 0 90">
       <a-plane color="#000000" height="0.42" width="0.1"></a-plane>
-      <a-text value="SENIOR CONSULTANT" align="center" color="#ffffff" width="1" position="0 0 0.001"></a-text>
+      <a-text value="SENIOR CONSULTANT" align="center" color="#ffffff" font="exo2bold" width="1" position="0 0 0.001"></a-text>
     </a-entity>
 
   </a-entity>
 </a-scene>
+
+<script>
+  // Staggered "pop in" when the card is found; reset instantly when it's lost
+  // so the entrance plays again next time.
+  document.querySelector('#target').addEventListener('targetFound', () => {
+    document.querySelectorAll('.pop').forEach((el, i) => {
+      el.setAttribute('animation__pop',
+        `property: scale; from: 0.001 0.001 0.001; to: 1 1 1; dur: 500; delay: ${i * 130}; easing: easeOutBack`);
+    });
+  });
+  document.querySelector('#target').addEventListener('targetLost', () => {
+    document.querySelectorAll('.pop').forEach(el => el.setAttribute('scale', '0.001 0.001 0.001'));
+  });
+</script>
 
 </body>
 </html>
