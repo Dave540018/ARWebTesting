@@ -1,7 +1,8 @@
 BEGIN:VCARD
 VERSION:3.0
-FN:Dave
-ORG:BST Software Private Limited
-TEL;TYPE=CELL:+910000000000
-EMAIL:you@example.com
+FN:Sathya Nair
+TITLE:Senior Consultant
+ORG:Future Mug
+TEL;TYPE=CELL:+919845200661
+EMAIL:sathya@futuremug.com
 END:VCARD
